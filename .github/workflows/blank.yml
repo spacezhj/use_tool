@@ -1,44 +1,32 @@
-# deploy.yml
-name: deploy blog to aliyun
+name: Deploy
+
 on:
   push:
     branches:
-      - master
+      - main  # 仅当推送到 main 分支时触发
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest  # 选择运行的操作系统
+
     steps:
-      # 切换分支
-      - name: Checkout
-        uses: actions/checkout@master
+      - name: Checkout code
+        uses: actions/checkout@v2  # 检出代码
 
-      # 使用 node:10
-      - name: use Node.js 10
-        uses: actions/setup-node@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: 10
-      # npm install
-      - name: npm install
-        run: |
-          npm install -g hexo-cli
-          npm install
-        env:
-          CI: true
-      # build
-      - name: hexo build
-        run: |
-          hexo clean
-          hexo generate
-        env:
-          CI: true
+          node-version: '14'  # 设置 Node.js 版本
 
-      # Deploy
+      - name: Install dependencies
+        run: npm install  # 安装依赖（可根据项目需要修改）
+
+      - name: Build project
+        run: npm run build  # 构建项目（可根据项目需要修改）
+
       - name: Deploy
-        uses: easingthemes/ssh-deploy@v2.0.7
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
-          ARGS: "-avz --delete"
-          SOURCE: "public/"
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.TARGET }}
+#        env:
+#          YOUR_ENV_VARIABLE: ${{ secrets.YOUR_SECRET }}
+        run: |
+          # 在此处添加你的部署命令，例如：  
+          ssh root@43.136.93.64:22 "cd /www/wwwroot/zhj.com && git pull && npm install && npm run start"
