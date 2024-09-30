@@ -14,8 +14,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14"
-      - name: 进入 use_tool 目录
-        run: cd use_tool
       - name: 安装依赖
         run: npm install
       #        working-directory: "/" # working-directory 指定 shell 命令运行目录
@@ -28,6 +26,6 @@ jobs:
           username: 'root'
           server: '${{ secrets.REMOTE_HOST}}'
           ssh_private_key: '${{ secrets.ACCESS_TOKEN }}'
-          local_path: './dist/*'
+          local_path: '/'
           remote_path: '/www/wwwroot/zhj.com/'
           args: "-o ConnectTimeout=5"
