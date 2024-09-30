@@ -26,6 +26,6 @@ jobs:
           username: 'root'
           server: '${{ secrets.REMOTE_HOST}}'
           ssh_private_key: '${{ secrets.ACCESS_TOKEN }}'
-          local_path: 'dist/*'
+          local_path: 'use_tool/dist/*'
           remote_path: '/www/wwwroot/zhj.com/'
           args: "-o ConnectTimeout=5"
