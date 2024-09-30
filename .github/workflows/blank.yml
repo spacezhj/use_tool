@@ -32,7 +32,14 @@ jobs:
         uses: easingthemes/ssh-deploy@v2.0.7
         env:
           # 本地.ssh文件下的私钥id_rsa，存在secrets的TOKEN中
-          SSH_PRIVATE_KEY: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDV1iDcnNqSpKvfJ1K0sPfFfwUFCaS5IcMxrsAa2llfIp3W2Ds6aRuglEX54leSxc5OYKoSyOO0ho6SAq+7xAJkODa6UYdUaWuqNpCQLYJpyfGdnTJjiZ8pgO3Gc3ATVJ0l0BLhz/ToopNXt11fgepjd3wrd4ajnoYF96B259Rgtu0wApA9V9R1SpalpdrxIDlSkVMqja/0GiY7Zi7MvHXkTw//gt7h0K4RjbBl8ExPgDDCBJ8vJdjjkPLEdKUq9dvYRrPKH4c4ONrw9EXIxQx784TX7GaavawSnAMyPb7HBC3KKImGK795QljhuNEWo/XMHQepdYKZy4pDAm2vY5S+KJCuchW5cRRduDYIV7HcGHM83ViMXEpJmlP4keNYixXQxvw+pFGVUAwqEp65b77+QaNsFy52NrpanPHlUTOPHxr2SGDY6AqiSsIf8iWp59up8Tdkt7YYq9KGYkeNJmmA810fZXaEOuKn5JlRCM+sAhITJ1lQSUo3/fbn/i9adP8= administrator@zhj"
+          SSH_PRIVATE_KEY: "-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+QyNTUxOQAAACAgjnBOFj8qh3532CDQwLGDcglm2w9cNnEU+u6ATI+mrAAAAKAiswspIrML
+KQAAAAtzc2gtZWQyNTUxOQAAACAgjnBOFj8qh3532CDQwLGDcglm2w9cNnEU+u6ATI+mrA
+AAAEATrHpdtk/SZIYqvBDpGI5jrsYIsblpEu23RLDw/MIRQyCOcE4WPyqHfnfYINDAsYNy
+CWbbD1w2cRT67oBMj6asAAAAGXJvb3RAVk0tMjAtMTQtb3BlbmNsb3Vkb3MBAgME
+-----END OPENSSH PRIVATE KEY-----
+"
           # 复制操作的参数。"-avzr --delete"意味部署时清空服务器目标目录下的文件
           ARGS: "-avzr --delete"
           # 源目录，相对于$GITHUB_WORKSPACE根目录的路径
