@@ -16,7 +16,9 @@ jobs:
           node-version: "14"
       - name: 安装依赖
         run: npm install
-        working-directory: / # working-directory 指定 shell 命令运行目录
+#        working-directory: / # working-directory 指定 shell 命令运行目录
+      - name: 安装 vite (如果需要)
+        run: npm install -g vite
       - name: 前端项目打包
         run: npm run build
       - name: 发布腾讯云
