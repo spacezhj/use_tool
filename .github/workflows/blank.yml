@@ -1,52 +1,45 @@
-# 一个workflow，名为deploy to tengxunyun
-name: deploy to tengxunyun
+name: Build and Deploy
 
-on: # 此CI/CD触发时的事件
-  push: # 在代码提交时自动触发
-    branches:
-      - master
+on:
+  push:
+    branches: [master] # master 分支提交时触发
 
-# 一个 CI/CD 的工作流有许多 jobs 组成，比如最典型的 job 是 lint，test，build。
 jobs:
-  build: # 构建job
-    runs-on: ubuntu-latest # 跑workflow的服务器系统
-    steps: # job的一系列动作
-      # 切换分支获取源码
-      - name: Checkout # step的名称，将会在 github action 的控制台中显示
-        # 选择一个action，可以理解为若干 steps.run，有利于代码复用
-        uses: actions/checkout@master
-      # 安装使用 node:10
-      - name: 安装node10
+  build-and-deploy:
+    runs-on: ubuntu-latest # 运行环境
+    steps:
+      - name: 签出代码
+        uses: actions/checkout@v2 # 使用 v2 版本
+      - name: 安装 Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
-      # 运行命令，npm install && npm run build
+          node-version: "14" # 明确指定 Node.js 14.x 版本
+      - name: 进入 use_tool 目录
+        run: cd use_tool
       - name: 安装依赖
         run: npm install
+      - name: 更新 vite
+        run: npm install vite@latest # 确保使用最新版本的 vite
       - name: 前端项目打包
         run: npm run build
-        env:
-          CI: true
-      # 部署到腾讯云服务器
-      - name: 部署到服务器
+      - name: 确认输出目录
+        run: ls -la dist
+      - name: 测试 SSH 连接
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key root@${{ secrets.REMOTE_HOST }} echo "SSH connection successful"
+      - name: 发布到腾讯云
         uses: easingthemes/ssh-deploy@v2.0.7
+        with:
+          REMOTE_HOST: '${{ secrets.REMOTE_HOST }}'
+          REMOTE_USER: '${{ secrets.REMOTE_USER }}'
+          TARGET: '/www/wwwroot/zhj.com'
+          SOURCE: 'dist/'
+          ARGS: '-avzr --delete'
+          SCRIPT: |
+            # 添加额外的日志输出
+            echo "Starting rsync..."
+            rsync -avzr --delete ./dist/ root@${{ secrets.REMOTE_HOST }}:/www/wwwroot/zhj.com
+            echo "Rsync completed."
+
         env:
-          # 本地.ssh文件下的私钥id_rsa，存在secrets的TOKEN中
-          SSH_PRIVATE_KEY: "-----BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-QyNTUxOQAAACAgjnBOFj8qh3532CDQwLGDcglm2w9cNnEU+u6ATI+mrAAAAKAiswspIrML
-KQAAAAtzc2gtZWQyNTUxOQAAACAgjnBOFj8qh3532CDQwLGDcglm2w9cNnEU+u6ATI+mrA
-AAAEATrHpdtk/SZIYqvBDpGI5jrsYIsblpEu23RLDw/MIRQyCOcE4WPyqHfnfYINDAsYNy
-CWbbD1w2cRT67oBMj6asAAAAGXJvb3RAVk0tMjAtMTQtb3BlbmNsb3Vkb3MBAgME
------END OPENSSH PRIVATE KEY-----
-"
-          # 复制操作的参数。"-avzr --delete"意味部署时清空服务器目标目录下的文件
-          ARGS: "-avzr --delete"
-          # 源目录，相对于$GITHUB_WORKSPACE根目录的路径
-          SOURCE: "dist/"
-          # 服务器域名
-          REMOTE_HOST: "43.136.93.64"
-          # 腾讯云默认用户名为root
-          REMOTE_USER: "root"
-          # 目标目录
-          TARGET: "/www/wwwroot/zhj.com"
+          SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
