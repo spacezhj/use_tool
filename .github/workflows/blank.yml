@@ -1,32 +1,31 @@
-name: Deploy
+name: blank
 
 on:
   push:
-    branches:
-      - main  # 仅当推送到 main 分支时触发
+    branches: [master] # master 分支提交时触发
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest  # 选择运行的操作系统
-
+  build:
+    runs-on: ubuntu-latest # 运行环境
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2  # 检出代码
-
-      - name: Set up Node.js
+      - name: 签出代码
+        uses: actions/checkout@master
+      - name: 安装 nodejs
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # 设置 Node.js 版本
-
-      - name: Install dependencies
-        run: npm install  # 安装依赖（可根据项目需要修改）
-
-      - name: Build project
-        run: npm run build  # 构建项目（可根据项目需要修改）
-
-      - name: Deploy
-#        env:
-#          YOUR_ENV_VARIABLE: ${{ secrets.YOUR_SECRET }}
-        run: |
-          # 在此处添加你的部署命令，例如：  
-          ssh root@43.136.93.64:22 "cd /www/wwwroot/zhj.com && git pull && npm install && npm run start"
+          node-version: "14"
+      - name: 安装依赖
+        run: npm install
+        working-directory: client-vue/mobile # working-directory 指定 shell 命令运行目录
+      - name: 前端项目打包
+        run: npm run build
+        working-directory: client-vue/mobile
+      - name: 发布腾讯云
+        uses: wlixcc/SFTP-Deploy-Action@v1.0 # 使用 SFTP 协议上传到腾讯云
+        with:
+          username: 'root'
+          server: '${{ secrets.REMOTE_HOST}}'
+          ssh_private_key: '${{ secrets.ACCESS_TOKEN }}'
+          local_path: 'client-vue/mobile/dist/*'
+          remote_path: '/www/wwwroot/zhj.com/'
+          args: "-o ConnectTimeout=5"
