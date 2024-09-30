@@ -16,15 +16,15 @@ jobs:
         # 选择一个action，可以理解为若干 steps.run，有利于代码复用
         uses: actions/checkout@master
       # 安装使用 node:10
-      - name: use Node.js 10
+      - name: 安装node10
         uses: actions/setup-node@v1
         with:
           node-version: 10
       # 运行命令，npm install && npm run build
-      - name: npm install and build
-        run: |
-          npm install
-          npm run build
+      - name: 安装依赖
+        run: npm install
+      - name: 前端项目打包
+        run: npm run build
         env:
           CI: true
       # 部署到腾讯云服务器
