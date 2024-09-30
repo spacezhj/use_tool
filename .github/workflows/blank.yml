@@ -16,16 +16,16 @@ jobs:
           node-version: "14"
       - name: 安装依赖
         run: npm install
-        working-directory: client-vue/mobile # working-directory 指定 shell 命令运行目录
+        working-directory: "use_tool" # working-directory 指定 shell 命令运行目录
       - name: 前端项目打包
         run: npm run build
-        working-directory: client-vue/mobile
+        working-directory: "use_tool"
       - name: 发布腾讯云
         uses: wlixcc/SFTP-Deploy-Action@v1.0 # 使用 SFTP 协议上传到腾讯云
         with:
           username: 'root'
           server: '${{ secrets.REMOTE_HOST}}'
           ssh_private_key: '${{ secrets.ACCESS_TOKEN }}'
-          local_path: 'client-vue/mobile/dist/*'
+          local_path: 'dist/*'
           remote_path: '/www/wwwroot/zhj.com/'
           args: "-o ConnectTimeout=5"
