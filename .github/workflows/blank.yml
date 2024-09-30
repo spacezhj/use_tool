@@ -18,9 +18,6 @@ jobs:
         run: npm install
       - name: 前端项目打包
         run: npm run build
-      - name: 测试 SSH 连接
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key root@${{ secrets.REMOTE_HOST }} echo "SSH connection successful"
       - name: 发布到腾讯云
         uses: easingthemes/ssh-deploy@v2.0.7
         with:
