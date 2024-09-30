@@ -25,11 +25,5 @@ jobs:
           REMOTE_USER: '${{ secrets.REMOTE_USER }}'
           TARGET: '/www/wwwroot/zhj.com'
           SOURCE: 'dist/'
-          SCRIPT: |
-            # 添加额外的日志输出
-            echo "Starting rsync..."
-            rsync -avzr --delete ./dist/ root@${{ secrets.REMOTE_HOST }}:/www/wwwroot/zhj.com
-            echo "Rsync completed."
-
         env:
           SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
