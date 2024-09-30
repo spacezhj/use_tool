@@ -26,4 +26,4 @@ jobs:
           TARGET: '/www/wwwroot/zhj.com'
           SOURCE: 'dist/'
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
