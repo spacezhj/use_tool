@@ -2,7 +2,7 @@ name: blank
 
 on:
   push:
-    branches: [master] # master 分支提交时触发
+    branches: [ master ] # master 分支提交时触发
 
 jobs:
   build:
@@ -14,12 +14,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14"
+      - name: 进入 use_tool 目录
+        run: cd use_tool
       - name: 安装依赖
         run: npm install
-#        working-directory: "/" # working-directory 指定 shell 命令运行目录
+      #        working-directory: "/" # working-directory 指定 shell 命令运行目录
       - name: 前端项目打包
         run: npm run build
-#        working-directory: "/use_tool"
+      #        working-directory: "/use_tool"
       - name: 发布腾讯云
         uses: wlixcc/SFTP-Deploy-Action@v1.0 # 使用 SFTP 协议上传到腾讯云
         with:
