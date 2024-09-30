@@ -19,7 +19,6 @@ jobs:
         working-directory: / # working-directory 指定 shell 命令运行目录
       - name: 前端项目打包
         run: npm run build
-        working-directory: use_tool
       - name: 发布腾讯云
         uses: wlixcc/SFTP-Deploy-Action@v1.0 # 使用 SFTP 协议上传到腾讯云
         with:
