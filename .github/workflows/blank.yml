@@ -19,13 +19,16 @@ jobs:
         working-directory: "./" # working-directory 指定 shell 命令运行目录
       - name: 前端项目打包
         run: npm run build
-      #        working-directory: "/use_tool"
+      #        working-directory: "/use_tool
+#      进入use_tool 目录
+      - name: 进入dist目录
+        run: cd /home/runner/work/use_tool/use_tool
       - name: 发布腾讯云
         uses: wlixcc/SFTP-Deploy-Action@v1.0 # 使用 SFTP 协议上传到腾讯云
         with:
           username: 'root'
           server: '${{ secrets.REMOTE_HOST}}'
           ssh_private_key: '${{ secrets.ACCESS_TOKEN }}'
-          local_path: './*/dist/*'
+          local_path: 'dist/*'
           remote_path: '/www/wwwroot/zhj.com/'
           args: "-o ConnectTimeout=5"
